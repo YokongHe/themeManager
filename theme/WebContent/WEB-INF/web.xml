@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
+  <display-name>theme</display-name>
+  <welcome-file-list>
+    <welcome-file>index.html</welcome-file>
+    <welcome-file>index.htm</welcome-file>
+    <welcome-file>index.jsp</welcome-file>
+    <welcome-file>default.html</welcome-file>
+    <welcome-file>default.htm</welcome-file>
+    <welcome-file>default.jsp</welcome-file>
+  </welcome-file-list>
+  <servlet>
+    <servlet-name>hello</servlet-name>
+    <jsp-file>/WEB-INF/index.jsp</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>upload</servlet-name>
+    <jsp-file>/WEB-INF/uploadFile.html</jsp-file>
+  </servlet>
+  <servlet>
+    <servlet-name>themeList</servlet-name>
+    <jsp-file>/WEB-INF/showThemeList.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>themeList</servlet-name>
+    <url-pattern>/themeList</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>hello</servlet-name>
+    <url-pattern>/hello</url-pattern>
+  </servlet-mapping>
+  <servlet-mapping>
+    <servlet-name>upload</servlet-name>
+    <url-pattern>/upload</url-pattern>
+  </servlet-mapping>
+  <context-param>
+    <description>Location to store uploaded file</description>
+    <param-name>file-upload</param-name>
+    <param-value>/test-upload</param-value>
+  </context-param>
+  <context-param>
+    <description>Location to store temp uploaded file</description>
+    <param-name>temp-path</param-name>
+    <param-value>/tempFile</param-value>
+  </context-param>
+</web-app>
