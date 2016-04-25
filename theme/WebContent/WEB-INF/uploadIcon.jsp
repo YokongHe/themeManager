@@ -17,8 +17,7 @@ String themeName = (String)request.getAttribute("themeName");
 %>
 ==============================================================
 <br/>
-主题：<%=themeName %>
-<br/>
+<h1>主题：<%=themeName %></h1>
 <%
 Map<String, AppBean> appMap = (Map<String, AppBean>)request.getAttribute("appMap");
 String iconPath = context.getInitParameter("filePath") + themeName + "\\";
@@ -31,8 +30,7 @@ while(it.hasNext()) {
 	%>
 	==============================================================
 	<br/>
-	应用：<%=appName %>
-	<br/>
+	<h2>应用：<%=appName %></h2>
 	<%
 	while(iconIt.hasNext()) {
 		String iconName = iconIt.next();
@@ -43,7 +41,7 @@ while(it.hasNext()) {
 		%>
 		-----------------------------------------------------------------
 		<br/>
-		图表：<%=iconName %>
+		<h3>图标：<%=iconName %></h3>
 		<%
 		if(icon.exists()){
 			%>
@@ -69,9 +67,10 @@ while(it.hasNext()) {
 	
 }
 %>
+<br><br><br>
 <form action="zipDownload" method="POST">
 	<input type="hidden" value="<%=themeName %>" name="themeName">
-	<input type="submit" value="打包下载">
+	<input type="submit" value="打包下载" style="width:100px;height:30px;">
 </form>
 </body>
 </html>
