@@ -8,6 +8,17 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=uft-8">
 <title>Insert title here</title>
+<!-- 新 Bootstrap 核心 CSS 文件 -->
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap.min.css">
+
+<!-- 可选的Bootstrap主题文件（一般不用引入） -->
+<link rel="stylesheet" href="//cdn.bootcss.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+<!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+<script src="//cdn.bootcss.com/jquery/1.11.3/jquery.min.js"></script>
+
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="//cdn.bootcss.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
 
 </head>
 <body>
@@ -15,9 +26,31 @@
 ServletContext context = getServletContext();
 String themeName = (String)request.getAttribute("themeName");
 %>
-==============================================================
-<br/>
-<h1>主题：<%=themeName %></h1>
+<div class="container-fluid">
+	<div class="row-fluid">
+		<div class="span12">
+		<h1>主题：<%=themeName %></h1>
+		<table class="table">
+				<thead>
+					<tr>
+						<th>
+							应用
+						</th>
+						<th>
+							图标
+						</th>
+						<th>
+							图标预览
+						</th>
+						<th>
+							选择文件
+						</th>
+						<th>
+							替换
+						</th>
+					</tr>
+				</thead>
+				<tbody>
 <%
 Map<String, AppBean> appMap = (Map<String, AppBean>)request.getAttribute("appMap");
 String iconPath = context.getInitParameter("filePath") + themeName + "\\";
@@ -28,9 +61,10 @@ while(it.hasNext()) {
 	String iconSrc = iconPath + appName + "\\";
 	Iterator<String> iconIt = mapEntry.getValue().getIconList().iterator();
 	%>
-	==============================================================
-	<br/>
-	<h2>应用：<%=appName %></h2>
+					<tr>
+						<td rowspan="<%=mapEntry.getValue().getIconList().size() %>">
+							<%=appName %>
+						</td>
 	<%
 	while(iconIt.hasNext()) {
 		String iconName = iconIt.next();
@@ -39,35 +73,49 @@ while(it.hasNext()) {
 		String imgSrc = fileSrc.replaceAll("\\\\", "/");
 		imgSrc = imgSrc.replaceFirst(":", "|");
 		%>
-		-----------------------------------------------------------------
-		<br/>
-		<h3>图标：<%=iconName %></h3>
+						<td>
+							<%=iconName %>
+						</td>
 		<%
 		if(icon.exists()){
 			%>
-			<img src="/themePic/<%=themeName %>/<%=appName %>/<%=iconName %>.png" width="50px" height="50px" />	
+			<td>
+				<img src="/themePic/<%=themeName %>/<%=appName %>/<%=iconName %>.png" width="50px" height="50px" />	
+			</td>
 			<%
 		} else {
 			%>
-			<img src="none.png" />	
+			<td>
+				<img src="/defaultIcon/<%=iconName %>.png" width="50px" height="50px" />
+			</td>
 			<%
 		}
 		%>
-		<form action="UploadServlet" method="post" enctype="multipart/form-data">
-		<input type="hidden" name="appName" value="<%=appName%>"/>
-		<input type="hidden" name="iconName" value="<%=iconName %>" />
-		<input type="file" name="file" size="50" />
-		<input type="hidden" name="themeName" value="<%=themeName %>" />
-		<input type="submit" value="替换icon" />
-		</form>
+		<td>
+			<form action="UploadServlet" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="appName" value="<%=appName%>"/>
+				<input type="hidden" name="iconName" value="<%=iconName %>" />
+				<input type="file" name="file" size="50" />
+				<input type="hidden" name="themeName" value="<%=themeName %>" />
+		</td>
+		<td>
+				<input type="submit" value="替换icon" />
+			</form>
+		</td>
+		</tr>
+		
 		<%
 	}
-	
-	
-	
 }
 %>
-<br><br><br>
+</tbody>
+	</table>
+	</div>
+	</div>
+	</div>
+
+
+
 <form action="zipDownload" method="POST">
 	<input type="hidden" value="<%=themeName %>" name="themeName">
 	<input type="submit" value="打包下载" style="width:100px;height:30px;">

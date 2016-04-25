@@ -32,14 +32,6 @@ public class getIconList extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-//		request.setCharacterEncoding("utf-8");
-//		String url = "iconList";
-//		String themeName = request.getParameter("themeName");
-//		System.out.println("DOGET servlet 获取: " + themeName);
-//		Map<String, AppBean> appMap = ResManager.getAppMap(false);
-//		request.setAttribute("themeName", themeName);
-//		request.setAttribute("appMap", appMap);
-//		request.getRequestDispatcher(url).forward(request, response);
 	}
 
 	/**
@@ -54,7 +46,7 @@ public class getIconList extends HttpServlet {
 			themeName = (String)request.getAttribute("themeName");
 			System.out.println("DOPOST servlet 获取: " + themeName);
 		}
-		Map<String, AppBean> appMap = ResManager.getAppMap(false);
+		Map<String, AppBean> appMap = ResManager.getAppMap(true);
 		request.setAttribute("themeName", themeName);
 		request.setAttribute("appMap", appMap);
 		request.getRequestDispatcher(url).forward(request, response);
