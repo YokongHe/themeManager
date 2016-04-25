@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<apps>
+	<app name="didi" >
+		<icon>com_didi</icon>
+	</app>
+	<app name="uber" >
+		<icon>com_uber</icon>
+	</app>
+	<app name="地图" >
+		<icon>com_map1</icon>
+		<icon>com_map2</icon>
+	</app>
+</apps>

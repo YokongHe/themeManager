@@ -6,32 +6,24 @@ import java.io.PrintWriter;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.tomcat.util.http.fileupload.FileItem;
-import org.apache.tomcat.util.http.fileupload.RequestContext;
-import org.apache.tomcat.util.http.fileupload.disk.DiskFileItemFactory;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletFileUpload;
-import org.apache.tomcat.util.http.fileupload.servlet.ServletRequestContext;
-
-import res.IconFileName;
+import org.apache.commons.fileupload.*;
+import org.apache.commons.fileupload.servlet.*;
+import org.apache.commons.fileupload.disk.*;
 
 /**
  * Servlet implementation class UploadServlet
  */
-@WebServlet(name="UploadServlet" ,urlPatterns={"/UploadServlet"},loadOnStartup=1,  
-initParams={  
-       @WebInitParam(name="uploadPath",value="/uploadPath/"),  
-       @WebInitParam(name="tempPath",value="/tempPath/"),
-})  
+@WebServlet(name="UploadServlet" ,urlPatterns={"/UploadServlet"},loadOnStartup=1  )  
 public class UploadServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 	
@@ -43,6 +35,7 @@ public class UploadServlet extends HttpServlet {
 	private File file;
 	private String themeName;
 	private String appName;
+	private String iconName;
        
     /**
      * @see HttpServlet#HttpServlet()
@@ -57,15 +50,10 @@ public class UploadServlet extends HttpServlet {
 	 */
 	public void init(ServletConfig config) throws ServletException {
 		// TODO Auto-generated method stub
-//		filePath = getServletContext().getInitParameter("file-upload");
-//		System.out.println(filePath);
-//		filePath = "/test-upload/";
 		super.init(config);
 		ServletContext context = getServletContext();
-		filePath = context.getRealPath(config.getInitParameter("uploadPath"));
-		tempPath = context.getRealPath(config.getInitParameter("tempPath"));
-//		System.out.println("filePath: " + filePath);
-//		System.out.println("tempPaht: " + tempPath);
+		filePath = context.getInitParameter("filePath");
+		tempPath = context.getInitParameter("tempPath");
 	}
 
 	/**
@@ -82,6 +70,7 @@ public class UploadServlet extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
+		request.setCharacterEncoding("UTF-8"); 
 		//检查上传文件请求
 		isMultipart = ServletFileUpload.isMultipartContent(request);
 		 //  从 HTTP servlet 获取 fileupload 组件需要的内容 
@@ -128,9 +117,16 @@ public class UploadServlet extends HttpServlet {
 	        	if (fi.isFormField()){
 	        		if(((String)fi.getFieldName()).equals("appName")){
 	        			appName = fi.getString().trim();
+	        			appName = new String(appName.getBytes("iso-8859-1"),"utf-8"); 
 	        		}
 	        		if(((String)fi.getFieldName()).equals("themeName")){
 	        			themeName = fi.getString().trim();
+	        			themeName = new String(themeName.getBytes("iso-8859-1"),"utf-8"); 
+	        		}
+	        		if(((String)fi.getFieldName()).equals("iconName")){
+	        			iconName = fi.getString().trim();
+	        			iconName = new String(iconName.getBytes("iso-8859-1"),"utf-8"); 
+	        			System.out.println("iconName: " + iconName);
 	        		}
 	        		continue;
 	        	}
@@ -138,33 +134,54 @@ public class UploadServlet extends HttpServlet {
 	        		//获取上传文件的参数
 	        		String fieldName = fi.getFieldName();
 	        		String fileName = fi.getName();
-//	        		System.out.println("fileName: " + fileName);
 	                String contentType = fi.getContentType();
 	                boolean isInMemory = fi.isInMemory();
 	                long sizeInBytes = fi.getSize();
 	                //写入文件
-	                fileName = IconFileName.FILE_NAME_MAP.get(appName) + fileName.substring(fileName.lastIndexOf("."));
 	                file = new File(filePath + fileName);
+	                File temFile = new File(filePath);
+	                if(!temFile.exists())
+	                	temFile.mkdirs();
 	                fi.write(file);
 	                out.println("Uploaded FileName: " + fileName + "<br>");
 	        	}
 	        }
-	    	out.println("</body>");
-	    	out.println("</html>");
+//	    	out.println("</body>");
+//	    	out.println("</html>");
 	    } catch (Exception e) {
 	    	e.printStackTrace();
 	    }
 	    
-	    //更改刚刚上传的文件名为正确的文件名
-	    String newFileName = IconFileName.FILE_NAME_MAP.get(appName) + file.getName().substring(file.getName().lastIndexOf("."));
-	    File tempFile = new File(filePath + themeName + "/" + newFileName);
+	    //更改刚刚上传的文件名为正确的文件名并更改到正确的位置
+	    String newFileName = iconName + file.getName().substring(file.getName().lastIndexOf("."));
+	    File tempFile = new File(filePath + themeName + "\\" + appName + "\\" + newFileName);
+	    File folder = new File(filePath + themeName + "\\" + appName + "\\");
+	    if(!folder.exists()){
+	    	System.out.println("是否创建文件夹成功： " + folder.mkdirs());
+	    }
+	    if(tempFile.exists()){
+	    	tempFile.delete();
+	    }
+	    System.out.println("正确的文件路径：" + filePath + themeName + "\\" + appName + "\\" + newFileName);
 	    file.renameTo(tempFile);
+	    tempFile.mkdirs();
+	   	ServletContext context = getServletContext();
+	   	System.out.println("文件路径： " + context.getRealPath(tempFile.getPath()));
+	   	System.out.println("文件是否存在： " + tempFile.exists());
 	    //删除多余文件
 	    File exFile = new File(filePath + file.getName());
 	    if(exFile.exists()) file.delete();
+//	    out.println("上传成功！<form action='getIconList' method='get'><input type='hidden' value='" + themeName + "' name='themeName'/>"
+//	    		+ "<input type='submit' value='返回'/>");
+	    out.println("</body>");
+    	out.println("</html>");
+//    	response.setCharacterEncoding("utf-8");
+//    	request.setAttribute("themeName", themeName);
+//	    request.getRequestDispatcher("getIconList").forward(request, response);
 	    System.out.println("================LOG=================");
 	    System.out.println("update icon " + newFileName);
 	    System.out.println("====================================");
+	    
 	}
 
 }

@@ -1,7 +1,7 @@
 package servlet;
 
 import java.io.IOException;
-import java.util.List;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -9,19 +9,20 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import res.AppBean;
 import res.ResManager;
 
 /**
- * Servlet implementation class getThemeList
+ * Servlet implementation class getIconList
  */
-@WebServlet("/getThemeList")
-public class getThemeList extends HttpServlet {
+@WebServlet("/getIconList")
+public class getIconList extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
     /**
      * @see HttpServlet#HttpServlet()
      */
-    public getThemeList() {
+    public getIconList() {
         super();
         // TODO Auto-generated constructor stub
     }
@@ -31,13 +32,14 @@ public class getThemeList extends HttpServlet {
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-//		response.getWriter().append("Served at: ").append(request.getContextPath());
-		
-		//传递主题列表
-		request.setAttribute("themeList", ResManager.getThemeList(true));
-		String url = "themeList";
-		//跳转到选择主题页面
-		request.getRequestDispatcher(url).forward(request, response);
+//		request.setCharacterEncoding("utf-8");
+//		String url = "iconList";
+//		String themeName = request.getParameter("themeName");
+//		System.out.println("DOGET servlet 获取: " + themeName);
+//		Map<String, AppBean> appMap = ResManager.getAppMap(false);
+//		request.setAttribute("themeName", themeName);
+//		request.setAttribute("appMap", appMap);
+//		request.getRequestDispatcher(url).forward(request, response);
 	}
 
 	/**
@@ -45,18 +47,16 @@ public class getThemeList extends HttpServlet {
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		// TODO Auto-generated method stub
-//		request.setAttribute("themeList", IconFileName.THEME_LIST);
-//		String url = "themeList";
-//		
-//		request.getRequestDispatcher(url).forward(request, response);
-		String url ="themeList";
+		request.setCharacterEncoding("utf-8");
+		String url = "iconList";
 		String themeName = request.getParameter("themeName");
-		themeName = new String(themeName.getBytes("iso-8859-1"),"utf-8"); 
-		List<String> themeList = ResManager.getThemeList(false);
-		if(!themeList.contains(themeName)){
-			ResManager.insertTheme(themeName);
+		if(themeName == null){
+			themeName = (String)request.getAttribute("themeName");
+			System.out.println("DOPOST servlet 获取: " + themeName);
 		}
-		request.setAttribute("themeList", ResManager.getThemeList(true));
+		Map<String, AppBean> appMap = ResManager.getAppMap(false);
+		request.setAttribute("themeName", themeName);
+		request.setAttribute("appMap", appMap);
 		request.getRequestDispatcher(url).forward(request, response);
 	}
 

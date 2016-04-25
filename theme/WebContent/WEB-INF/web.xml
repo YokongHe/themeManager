@@ -21,6 +21,14 @@
     <servlet-name>themeList</servlet-name>
     <jsp-file>/WEB-INF/showThemeList.jsp</jsp-file>
   </servlet>
+  <servlet>
+    <servlet-name>iconList</servlet-name>
+    <jsp-file>/WEB-INF/uploadIcon.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>iconList</servlet-name>
+    <url-pattern>/iconList</url-pattern>
+  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>themeList</servlet-name>
     <url-pattern>/themeList</url-pattern>
@@ -35,12 +43,17 @@
   </servlet-mapping>
   <context-param>
     <description>Location to store uploaded file</description>
-    <param-name>file-upload</param-name>
-    <param-value>/test-upload</param-value>
+    <param-name>filePath</param-name>
+    <param-value>G:\workspace\themeProject\themes\</param-value>
   </context-param>
   <context-param>
     <description>Location to store temp uploaded file</description>
-    <param-name>temp-path</param-name>
-    <param-value>/tempFile</param-value>
+    <param-name>tempPath</param-name>
+    <param-value>G:\workspace\themeProject\tempFile\</param-value>
+  </context-param>
+  <context-param>
+    <description>Location to store temp uploaded file</description>
+    <param-name>zipPath</param-name>
+    <param-value>G:\workspace\themeProject\zipFile\</param-value>
   </context-param>
 </web-app>
